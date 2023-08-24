@@ -43,15 +43,13 @@ if (isset($_FILES['media'])) {
 $post_id = format_uuidv4();
 
 $exec = mysqli_query($koneksi, "INSERT INTO posts VALUES('" . $post_id . "','" . $_SESSION['userId'] . "','" . $post . "','" . $targetFilePath . "','" . date('Y-m-d H:i:s') . "')");
-echo mysqli_error($koneksi);
+// echo mysqli_error($koneksi);
 
 $ArrTags = carihastag($post);
 if (count($ArrTags) > 0) {
     for ($i = 0; $i < count($ArrTags); $i++) {
         $tag_id = format_uuidv4();
-        echo "count : " . $i . '<br>';
         $exec = mysqli_query($koneksi, 'SELECT * FROM tags WHERE name="' . strtolower($ArrTags[$i]) . '"');
-
         if (mysqli_num_rows($exec) <= 0) {
             $exec = mysqli_query($koneksi, 'INSERT INTO tags VALUES("' . $tag_id . '","' . strtolower($ArrTags[$i]) . '")');
         } else {

@@ -3,7 +3,6 @@ include 'config/config.php';
 include 'config/database.php';
 session_start();
 if (isset($_SESSION['email'])) {
-
     header('location:' . $baseURL . 'dashboard.php');
 }
 ?>

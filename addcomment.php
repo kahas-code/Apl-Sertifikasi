@@ -10,7 +10,32 @@ $post_id = $_POST['post_id'];
 $user_id = $_SESSION['userId'];
 $comment = $_POST['comment'];
 
-mysqli_query($koneksi, "INSERT INTO comments VALUES('" . $id . "','" . $user_id . "','" . $post_id . "','" . $comment . "','" . date('Y-m-d H:i:s') . "')");
+$targetFilePath = '';
+
+if (!empty($_FILES['file'])) {
+    $file = $_FILES['file'];
+
+    // Informasi tentang file yang diunggah
+    $fileName = $file['name'];
+    $fileTmpName = $file['tmp_name'];
+    $fileSize = $file['size'];
+    $fileError = $file['error'];
+
+    // Pindahkan file yang diunggah ke lokasi yang ditentukan
+    $targetDirectory = 'uploads/'; // Ganti dengan direktori yang sesuai
+    $targetFilePath = $targetDirectory . $fileName;
+
+    if ($fileError === 0) {
+        if (move_uploaded_file($fileTmpName, $targetFilePath)) {
+            echo "File berhasil diunggah.";
+        } else {
+            echo "Terjadi kesalahan saat mengunggah file.";
+        }
+    } else {
+        echo "Terjadi kesalahan saat mengunggah file: " . $fileError;
+    }
+}
+mysqli_query($koneksi, "INSERT INTO comments VALUES('" . $id . "','" . $user_id . "','" . $post_id . "','" . $comment . "','" . $targetFilePath . "','" . date('Y-m-d H:i:s') . "')");
 
 
 $ArrTags = carihastag($comment);

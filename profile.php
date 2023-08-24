@@ -10,8 +10,8 @@ if (!isset($_SESSION['email'])) {
 if (!empty($_POST)) {
     $targetFilePath = '';
 
-    if (isset($_FILES['media'])) {
-        $file = $_FILES['media'];
+    if (isset($_FILES['foto'])) {
+        $file = $_FILES['foto'];
 
         // Informasi tentang file yang diunggah
         $fileName = $file['name'];
@@ -27,10 +27,10 @@ if (!empty($_POST)) {
             if (move_uploaded_file($fileTmpName, $targetFilePath)) {
                 echo "File berhasil diunggah.";
             } else {
-                echo "Terjadi kesalahan saat mengunggah file.";
+                // echo "Terjadi kesalahan saat mengunggah file.";
             }
         } else {
-            echo "Terjadi kesalahan saat mengunggah file: " . $fileError;
+            // echo "Terjadi kesalahan saat mengunggah file: " . $fileError;
         }
     }
 

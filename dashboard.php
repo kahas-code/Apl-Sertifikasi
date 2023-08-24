@@ -147,13 +147,16 @@ if (!isset($_SESSION['email'])) {
 
                 <div class="modal-body">
                     <div id="komentar" class="p-3"></div>
-                    <form action="" id="addcomment">
-                        <div class="input-group mb-3">
+                    <form action="" id="addcomment" enctype="multipart/form-data" role="form">
+                        <div class="input-group">
                             <input type="text" class="form-control" placeholder="Tambahkan komentar" name="comment" aria-label="Tambahkan komentar" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" id="basic-addon2"><button type="submit" class="kirim btn"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button></span>
                             </div>
                             <input type="hidden" name="post_id">
+                        </div>
+                        <div class="mb-3">
+                            <input type="file" name="file" id="" class="form-control">
                         </div>
                     </form>
                 </div>
@@ -212,16 +215,23 @@ if (!isset($_SESSION['email'])) {
     }
     $('#addcomment').submit(function(event) {
         event.preventDefault();
-        let FormData = $(this).serialize();
-
+        // Get form
+        var form = $('#addcomment')[0];
+        // Create an FormData object 
+        var data = new FormData(form);
         $.ajax({
             url: '<?= $baseURL ?>addcomment.php',
-            type: 'POST',
-            data: FormData,
-            success: function(data) {
+            enctype: 'multipart/form-data',
+            type: "POST",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function(response) {
                 loadkomen($('input[name="post_id"]').val());
                 $('input[name="comment"]').val('');
-                console.log(FormData);
+                // console.log(FormData);
             }
         })
     })
@@ -284,14 +294,27 @@ if (!isset($_SESSION['email'])) {
             }
         })
     })
+
+    function delcom(el) {
+        let id = $(el).data('id');
+        $.ajax({
+            url: '<?= $baseURL ?>delcomment.php?id=' + id,
+            type: 'GET',
+            success: function(data) {
+                loadkomen($('input[name="post_id"]').val());
+            }
+        })
+    }
     $('#search').keyup(function(event) {
         event.preventDefault();
-        let value = $(this).val();
+        let value = $(this).val().replace('#', '');
+        // console.log(value);
         $.ajax({
-            url: '<?= $baseURL ?>search.php?key=#' + value,
+            url: '<?= $baseURL ?>search.php?key=' + value,
             type: "GET",
             success: function(response) {
                 $('#tagssearch').html(response);
+                // console.log(response);
             }
         })
     })
